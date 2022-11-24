@@ -1,0 +1,2 @@
+- name: installing clab
+  shell: bash -c "$(wget -qO - https://get.containerlab.dev)"

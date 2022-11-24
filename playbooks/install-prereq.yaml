@@ -4,6 +4,7 @@
     https_proxy: "{{proxy.https_proxy}}"
     no_proxy: "{{proxy.no_proxy}}"
   roles:
+    
     - { role: docker, tags: docker}
     - { role: kubectl, tags: kubectl}
     - { role: kind, tags: kind}
@@ -12,3 +13,4 @@
     - { role: bash, tags: bash }
     - { role: tree, tags: tree}
     - { role: nephio/install, tags: nephio}
+    - { role: clab, tags: clab}
