@@ -80,8 +80,6 @@ pip install --upgrade pip
 pip install ansible
 pip install pygithub
 ansible-galaxy collection install community.general
-
-source .venv/bin/activate
 ```
 
 ## deploy nephio environment
