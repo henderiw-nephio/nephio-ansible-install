@@ -54,10 +54,10 @@ all:
       install_dir: nephio-install
       packages_url: https://github.com/nephio-project/nephio-packages.git
     clusters:
-      mgmt: [172.88.0.0/16, 10.196.0.0/16, 10.96.0.0/16]
-      edge1: [172.88.0.0/16, 10.196.0.0/16, 10.96.0.0/16]
-      #edge2: [172.88.0.0/16, 10.196.0.0/16, 10.96.0.0/16]
-      #region1: [172.88.0.0/16, 10.196.0.0/16, 10.96.0.0/16]
+      mgmt: {mgmt_subnet: 172.88.0.0/16, pod_subnet: 10.196.0.0/16, svc_subnet: 10.96.0.0/16}
+      edge1: {mgmt_subnet: 172.89.0.0/16, pod_subnet: 10.197.0.0/16, svc_subnet: 10.97.0.0/16}
+      edge2: {mgmt_subnet: 172.90.0.0/16, pod_subnet: 10.198.0.0/16, svc_subnet: 10.98.0.0/16}
+      region1: {mgmt_subnet: 172.91.0.0/16, pod_subnet: 10.199.0.0/16, svc_subnet: 10.99.0.0/16}
   children:
     vm:
       hosts:
