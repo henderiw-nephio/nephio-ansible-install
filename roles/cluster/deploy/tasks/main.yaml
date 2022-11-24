@@ -1,4 +1,13 @@
 ---
+- name: systctl config
+  become: true
+  lineinfile: 
+    path: /etc/sysctl.conf
+    line: fs.inotify.max_user_watches=524288
+  with_items:
+    - fs.inotify.max_user_watches=524288
+    - fs.inotify.max_user_instances=512
+
 - name: deploy clusters
   include_tasks: cluster_files.yaml
   with_dict: "{{ clusters }}"
