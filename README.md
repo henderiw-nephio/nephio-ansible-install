@@ -11,7 +11,7 @@ The installation assumes a VM is created with the following characteristics:
 - SSH access with a SSH key is setup + username
 
 The creation of the VM is right now out of scope, but we can see what we can do going forward.
-Also we assume right now the ansible playbook is executed remmote from the VM. We can see if people want to use a different approach.
+Also we assume right now the ansible playbook is executed remote from the VM. We can see if people want to use a different approach going forward.
 
 In a local environment clone the repo in a local environment
 
@@ -80,6 +80,8 @@ pip install --upgrade pip
 pip install ansible
 pip install pygithub
 ansible-galaxy collection install community.general
+
+source .venv/bin/activate
 ```
 
 ## deploy nephio environment
