@@ -2,41 +2,29 @@
 
 ## installation
 
-This repo provides the artifacts to install a Nephio environment using ansible. We assume a VM is created which the following characteristics:
+This repo provides the artifacts to install a Nephio environment using ansible to experiment with Nephio following [nephio ONE summit 2022 workshop](https://github.com/nephio-project/one-summit-22-workshop). The installation creates kind clusters, github repos and the manifests to get a base Nephio environment up an running.
+
+The installation assumes a VM is created with the following characteristics:
 
 - ubuntu 22.04LTS -> this is tested right now
 - 32G RAM, 8 vcpu -> we can change this based on the amount of kind clusters we need
 - SSH access with a SSH key is setup + username
 
 The creation of the VM is right now out of scope, but we can see what we can do going forward.
+Also we assume right now the ansible playbook is executed remmote from the VM. We can see if people want to use a different approach.
 
-The installation creates kind clusters, github repos and the manifests to get a base environment up an running to experiment with Nephio following [nephio ONE summit 2022 workshop](https://github.com/nephio-project/one-summit-22-workshop)
-
-To start you need to install ansible. Below is an example how to install ansible using a virtual environment.
-
-```python
-python3 -m venv .venv
-source .venv/bin/activate
-pip install --upgrade pip
-pip install ansible
-pip install pygithub
-ansible-galaxy collection install community.general
-```
-
-clone the repo in a local environment
+In a local environment clone the repo in a local environment
 
 ```bash
 git clone https://github.com/henderiw-nephio/nephio-ansible-install
-```
-
-Besides ansible we need to provide an inventory file that is used by the ansible playbooks to setup your enviornment.
-
-The ansible.config assumes the inventory file is located in inventory/nephio.yaml within the clone environment
-
-```
 cd nephio-ansible-install
+```
+
+The installation requires an inventory file that is tailored to your enviornment. The ansible.config assumes the inventory file is located in inventory/nephio.yaml within the cloned environment. Create an inventory directory and the nephio.yaml file within the inventory directory
+
+```bash
 mkdir -p inventory
-touch nephio.yaml
+touch inventory/nephio.yaml
 ```
 
 Open an editor of your choice and paste the below in the inventory/nephio.yaml file
@@ -76,12 +64,23 @@ all:
         <ip address of the VM>:
 ```
 
-Some customization is required to tailor the installation to your environment. Edit the inventory/nephio.yaml file where you update:
+Some customizations are required to tailor the installation to your environment. Edit the inventory/nephio.yaml file where you update:
 
 - cloud_user: the username that is created to access the VM using SSH
 - github_username: your gihub user name
 - github_token: github access token to access github [github personal access token](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - github_organization: This can be a github organization of your github user dependening one how you create your repo's
+
+To start running ansible playbooks an ansible environment is required. Below is an example how to install ansible using a virtual environment. The repo scripts rely on the ansible galaxy community collection
+
+```python
+python3 -m venv .venv
+source .venv/bin/activate
+pip install --upgrade pip
+pip install ansible
+pip install pygithub
+ansible-galaxy collection install community.general
+```
 
 ## deploy nephio environment
 
@@ -90,31 +89,31 @@ Now that the environment is up an running we can install the Nephio environment
 First we create some prerequisites, which installs kubectl, kind, kpt, cni and setup the bash environment
 
 ```bash
-ansible-playbook install-prereq.yaml
+ansible-playbook playbooks/install-prereq.yaml
 ```
 
 After we create the github repo(s) Nephio uses
 
 ```bash
-ansible-playbook create-repos.yaml
+ansible-playbook playbooks/create-repos.yaml
 ```
 
 Next we deploy the kind clusters and install the nephio components
 
 ```bash
-ansible-playbook deploy-clusters.yaml
+ansible-playbook playbooks/deploy-clusters.yaml
 ```
 
 Lastly we install the environment manifests we use for the workshop scenario's
 
 ```bash
-ansible-playbook configure-nephio.yaml
+ansible-playbook playbooks/configure-nephio.yaml
 ```
 
 ## destroy nephio environment
 
 To destroy the nephio environment
 
-```
-ansible-playbook destroy-clusters.yaml
+```bash
+ansible-playbook playbooks/destroy-clusters.yaml
 ```
