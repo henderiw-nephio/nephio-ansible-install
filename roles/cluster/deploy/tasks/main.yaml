@@ -1,0 +1,5 @@
+---
+- name: deploy clusters
+  include_tasks: cluster_files.yaml
+  with_dict: "{{ clusters }}"
+  #ignore_errors: true

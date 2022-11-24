@@ -1,0 +1,16 @@
+---
+
+- name: adding alias in ~/.bashrc
+  lineinfile: 
+    path: ~/.bashrc 
+    line: "alias k=kubectl"
+
+- name: adding alias in ~/.bashrc
+  lineinfile: 
+    path: ~/.bashrc 
+    line: "source <(kubectl completion bash)"
+
+- name: adding alias in ~/.bashrc
+  lineinfile: 
+    path: ~/.bashrc 
+    line: "source <(kpt completion bash)"

@@ -1,0 +1,41 @@
+---
+- name: deploy nephio-system on mgmt cluster
+  shell: kpt --kubeconfig ~/.kube/mgmt-config live init nephio-system
+  args: 
+    chdir: "{{ tmp_directory }}/{{ nephio.install_dir}}"
+  register: result
+  failed_when:
+    - result.rc > 1
+    - result.rc == 1 and "already" not in result.stderr
+
+- name: deploy nephio-system on mgmt cluster
+  shell: kpt --kubeconfig ~/.kube/mgmt-config live apply nephio-system --reconcile-timeout=15m --output=table
+  args: 
+    chdir: "{{ tmp_directory }}/{{ nephio.install_dir}}"
+
+# - name: deploy nephio-webui on mgmt cluster
+#   shell: kpt --kubeconfig ~/.kube/mgmt-config live init nephio-webui
+#   args: 
+#     chdir: "{{ tmp_directory }}/{{ nephio.install_dir}}"
+#   register: result
+#   failed_when:
+#     - result.rc > 1
+#     - result.rc == 1 and "already exists" not in result.stderr
+
+# - name: deploy nephio-webui  on mgmt cluster
+#   shell: kpt --kubeconfig ~/.kube/mgmt-config live apply nephio-webui
+#   args: 
+#     chdir: "{{ tmp_directory }}/{{ nephio.install_dir}}"
+
+- name: configure secret
+  shell: |
+    cat <<EOF | kubectl --kubeconfig ~/.kube/mgmt-config apply -f -
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: github-personal-access-token
+      stringData:
+        password: {{ github_token }}
+        username: {{ github_username }}
+      type: kubernetes.io/basic-auth
+    EOF

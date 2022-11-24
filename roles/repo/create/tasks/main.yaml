@@ -1,0 +1,15 @@
+---
+- name: create repo nephio-{{ item.key }}
+  community.general.github_repo:
+    access_token: "{{ github_token}}"
+    organization: "{{ github_organization}}"
+    name: nephio-{{ item.key }}
+    #description: "Just for fun"
+    #private: true
+    state: present
+    force_defaults: true
+  register: result
+  with_dict: "{{ clusters }}"
+
+## TODO add readme
+## Add collaborators

@@ -1,0 +1,8 @@
+---
+- name: deploy nephio on mgmt cluster
+  include_tasks: mgmtcluster_files.yaml
+
+- name: deploy nephio on non-mgmt clusters
+  include_tasks: nonmgmtcluster_files.yaml
+  with_dict: "{{ clusters }}"
+  when: item.key != "mgmt"

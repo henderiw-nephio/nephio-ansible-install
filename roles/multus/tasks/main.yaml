@@ -1,0 +1,6 @@
+---
+- name: deploy multus
+  include_tasks: cluster_files.yaml
+  with_dict: "{{ clusters }}"
+  #ignore_errors: true
+  when: item.key != "mgmt"
