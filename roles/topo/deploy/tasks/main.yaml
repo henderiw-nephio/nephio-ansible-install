@@ -1,0 +1,5 @@
+- name: copy topology
+  template:
+    src: "{{ role_path }}/templates/topology.yaml.j2"
+    dest: "{{ tmp_directory }}/topology.yaml"
+    mode: 0644

@@ -29,7 +29,7 @@
       apiVersion: configsync.gke.io/v1beta1
       kind: RootSync
       metadata: # kpt-merge: config-management-system/nephio-mgmt-cluster-sync
-        name: repo-workload-sync
+        name: repo-{{ item.key }}-sync
         namespace: config-management-system
         annotations:
           config.kubernetes.io/depends-on: apiextensions.k8s.io/CustomResourceDefinition/rootsyncs.configsync.gke.io

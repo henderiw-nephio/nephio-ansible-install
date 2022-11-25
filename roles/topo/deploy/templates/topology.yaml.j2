@@ -1,0 +1,13 @@
+name: nephio-topology
+topology:
+  kinds:
+    srl:
+      type: ixrd3
+      image: ghcr.io/nokia/srlinux
+  nodes:
+    srl:
+      kind: srl
+  links:
+{% for dict_item in clusters %}
+    - endpoints: ["srl:e1-{{ loop.index }}", "container:{{dict_item}}-control-plane:eth1"]
+{% endfor %}

@@ -5,3 +5,4 @@
     no_proxy: "{{proxy.no_proxy}}"
   roles:
     - { role: cluster/destroy, tags: cluster_destroy }
+    - { role: topo/deploy, tags: topo_deploy }
