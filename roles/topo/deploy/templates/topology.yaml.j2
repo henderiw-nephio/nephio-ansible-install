@@ -13,5 +13,5 @@ topology:
 {% endfor %}
   links:
 {% for dict_item in clusters %}
-    - endpoints: ["srl:e1-{{ loop.index }}", "container:{{dict_item}}-control-plane:eth1"]
+    - endpoints: ["srl:e1-{{ loop.index }}", "{{dict_item}}-control-plane:eth1"]
 {% endfor %}
