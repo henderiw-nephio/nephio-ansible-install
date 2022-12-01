@@ -1,0 +1,3 @@
+- name: destroy topo
+  become: true
+  shell: clab destroy -t {{ tmp_directory }}/topology.yaml

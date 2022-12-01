@@ -3,3 +3,7 @@
     src: "{{ role_path }}/templates/topology.yaml.j2"
     dest: "{{ tmp_directory }}/topology.yaml"
     mode: 0644
+
+- name: deploy topo
+  become: true
+  shell: clab deploy -t {{ tmp_directory }}/topology.yaml
