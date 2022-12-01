@@ -16,3 +16,6 @@
 - name: Add user to docker group
   become: true
   shell: usermod -aG docker {{ cloud_user }}
+
+- name: Reset connection so docker group is picked up.
+  meta: reset_connection

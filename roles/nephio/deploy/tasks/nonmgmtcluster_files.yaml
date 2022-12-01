@@ -43,3 +43,26 @@
           secretRef:
             name: github-personal-access-token
     EOF
+  when: github_organization is defined
+
+- name: configure nephio-configsync
+  shell: |
+    cat <<EOF | kubectl --kubeconfig ~/.kube/{{ item.key }}-config apply -f -
+      apiVersion: configsync.gke.io/v1beta1
+      kind: RootSync
+      metadata: # kpt-merge: config-management-system/nephio-mgmt-cluster-sync
+        name: repo-{{ item.key }}-sync
+        namespace: config-management-system
+        annotations:
+          config.kubernetes.io/depends-on: apiextensions.k8s.io/CustomResourceDefinition/rootsyncs.configsync.gke.io
+          internal.kpt.dev/upstream-identifier: 'configsync.gke.io|RootSync|config-management-system|nephio-mgmt-cluster-sync'
+      spec:
+        sourceFormat: unstructured
+        git:
+          repo: https://github.com/{{ github_username }}/nephio-{{ item.key }}.git
+          branch: main
+          auth: token
+          secretRef:
+            name: github-personal-access-token
+    EOF
+  when: github_organization is not defined
