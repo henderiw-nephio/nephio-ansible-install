@@ -67,9 +67,9 @@ all:
 Some customizations are required to tailor the installation to your environment. Edit the inventory/nephio.yaml file where you update:
 
 - cloud_user: the username that is created to access the VM using SSH
-- github_username: your gihub user name
+- github_username: your github user name
 - github_token: github access token to access github [github personal access token](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
-- github_organization: This can be a github organization of your github user dependening one how you create your repo's
+- github_organization: (optional) if you use a github organization for the repo's you should add your github organization here, otherwise it uses the github username
 
 To start running ansible playbooks an ansible environment is required. Below is an example how to install ansible using a virtual environment. The repo scripts rely on the ansible galaxy community collection
 
