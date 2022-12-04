@@ -39,3 +39,21 @@
         username: {{ github_username }}
       type: kubernetes.io/basic-auth
     EOF
+
+- name: Slurp gitea access token
+  ansible.builtin.slurp:
+    src: /home/{{ cloud_user }}/gitea/nephio-gitea-token
+  register: gitea_token
+
+- name: configure gitea secret
+  shell: |
+    cat <<EOF | kubectl --kubeconfig ~/.kube/mgmt-config apply -f -
+      apiVersion: v1
+      kind: Secret
+      metadata:
+        name: gitea-access-token
+      stringData:
+        password: {{ gitea_token['content'] | b64decode }}
+        username: nephio
+      type: kubernetes.io/basic-auth
+    EOF
