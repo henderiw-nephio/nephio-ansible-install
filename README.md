@@ -98,6 +98,18 @@ After we create the github repo(s) Nephio uses
 ansible-playbook playbooks/create-repos.yaml
 ```
 
+Create the gitea instance Nephio uses
+
+```bash
+ansible-playbook playbooks/create-gitea.yaml
+```
+
+Create the gitea repo(s) Nephio uses
+
+```bash
+ansible-playbook playbooks/create-gitea-repos.yaml
+```
+
 Next we deploy the kind clusters and install the nephio components
 
 ```bash
@@ -109,6 +121,21 @@ Lastly we install the environment manifests we use for the workshop scenario's
 ```bash
 ansible-playbook playbooks/configure-nephio.yaml
 ```
+
+## Accessing Your Environment
+
+```bash
+# login from your workstation
+#   nephio webui: forwarding 7007 -> localhost:7007 on the remote VM.
+#   gitea webui: forwarding 3000 -> localhost:3000 on the remote VM.
+ssh -L7007:localhost:7007 -L3000:localhost:3000 $IP
+# now you are in the remote VM, in there run
+kubectl --kubeconfig ~/.kube/mgmt-config port-forward --namespace=nephio-webui svc/nephio-webui 7007
+```
+
+On your workstation you can now browse 
+* to the URL [http://localhost:7007](http://localhost:7007) for the nephio webui
+* to the URL [http://localhost:3000](http://localhost:3000) for the gitea webui (use nephio/nephio to sign in)
 
 ## destroy nephio environment
 
