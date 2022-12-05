@@ -1,10 +1,11 @@
+## © 2022 Nokia
+## Licensed under the Apache License 2.0
+## SPDX-License-Identifier: Apache-2.0
+
 ---
 - name: Download kpt binary
   ansible.builtin.get_url:
-    #url: "https://storage.googleapis.com/kpt-dev/{{ kpt_version }}/{{ host_os }}_{{ host_arch }}/kpt"
     url: "https://github.com/GoogleContainerTools/kpt/releases/download/v{{ kpt_version }}/kpt_{{ host_os }}_{{ host_arch }}"
-    #url: "https://github.com/GoogleContainerTools/kpt/releases/download/v{{ kpt_version }}/kpt_{{ host_os }}_{{ host_arch }}"
-    #url: "https://i.jpillora.com/GoogleContainerTools/kpt@v{{ kpt_version }}!"
     #checksum: "{{ kubectl_checksum_binary }}"
     dest: "{{ tmp_directory }}/kpt"
     mode: 0600
