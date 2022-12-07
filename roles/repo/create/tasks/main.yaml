@@ -1,28 +1,34 @@
 ---
 - name: create repo nephio-{{ item.key }}
-  community.general.github_repo:
-    access_token: "{{ github_token}}"
-    organization: "{{ github_organization}}"
-    name: nephio-{{ item.key }}
-    #description: "Just for fun"
-    #private: true
-    state: present
-    force_defaults: true
+  ansible.builtin.uri:
+    url: https://api.github.com/orgs/{{ github_organization }}/repos
+    headers:
+      Accept: application/vnd.github+json
+      Authorization: Bearer {{ github_token }}
+      X-GitHub-Api-Version: 2022-11-28
+    method: POST
+    body: {'auto_init': true, 'name': "nephio-{{ item.key }}"}
+    status_code: 201
+    body_format: json
   register: result
   with_dict: "{{ clusters }}"
-  when: github_organization is defined
-
+  when:
+    - github_username is defined
+    - github_organization is defined
 - name: create repo nephio-{{ item.key }}
-  community.general.github_repo:
-    access_token: "{{ github_token}}"
-    name: nephio-{{ item.key }}
-    #description: "Just for fun"
-    #private: true
-    state: present
-    force_defaults: true
+  ansible.builtin.uri:
+    url: https://api.github.com/user/repos
+    headers:
+      Accept: application/vnd.github+json
+      Authorization: Bearer {{ github_token }}
+      X-GitHub-Api-Version: 2022-11-28
+    method: POST
+    body: {'auto_init': true, 'name': "nephio-{{ item.key }}"}
+    status_code: 201
+    body_format: json
   register: result
   with_dict: "{{ clusters }}"
-  when: github_organization is not defined
-
-## TODO add readme
+  when:
+    - github_username is defined
+    - github_organization is not defined
 ## Add collaborators

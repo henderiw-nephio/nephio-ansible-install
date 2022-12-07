@@ -16,8 +16,6 @@
           branch: main
           directory: /
           repo: https://github.com/nephio-project/nephio-packages.git
-          secretRef:
-            name: github-personal-access-token
         type: git
     EOF
 
@@ -38,8 +36,6 @@
           branch: main
           directory: /
           repo: https://github.com/nephio-project/free5gc-packages.git
-          secretRef:
-            name: github-personal-access-token
         type: git
     EOF
 

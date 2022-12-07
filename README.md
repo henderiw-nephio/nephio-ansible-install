@@ -27,7 +27,9 @@ mkdir -p inventory
 touch inventory/nephio.yaml
 ```
 
-Open an editor of your choice and paste the below in the inventory/nephio.yaml file
+Open an editor of your choice and paste the below in the inventory/nephio.yaml file.
+
+--> You can choose between github repos (remote) or gitea repos (local) by setting the respective vars in the inventory/nephio.yaml file (see below).
 
 ```yaml
 all:
@@ -36,6 +38,8 @@ all:
     github_username: <github username>
     github_token: <github personal access token>
     github_organization: <github organization or username>
+    gitea_username: <gitea username>
+    gitea_password: <gitea password>
     proxy:
       http_proxy: 
       https_proxy:
@@ -70,6 +74,10 @@ Some customizations are required to tailor the installation to your environment.
 - github_username: your github user name
 - github_token: github access token to access github [github personal access token](https://docs.github.com/en/enterprise-server@3.4/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 - github_organization: (optional) if you use a github organization for the repo's you should add your github organization here, otherwise it uses the github username
+- gitea_username: your [gitea](https://gitea.io) (local repo) username
+- gitea_password: your [gitea](https://gitea.io) (local repo) password
+
+Note: You can choose between using remote github repos or local gitea repos for your Nephio environment by setting either the github variables or the gitea variables.
 
 To start running ansible playbooks an ansible environment is required. Below is an example how to install ansible using a virtual environment. The repo scripts rely on the ansible galaxy community collection
 
@@ -92,19 +100,19 @@ First we create some prerequisites, which installs kubectl, kind, kpt, cni and s
 ansible-playbook playbooks/install-prereq.yaml
 ```
 
-After we create the github repo(s) Nephio uses
+Create the github repo(s) Nephio uses (optional: either choose to run this step for github or steps for gitea below)
 
 ```bash
 ansible-playbook playbooks/create-repos.yaml
 ```
 
-Create the gitea instance Nephio uses
+Create the gitea instance Nephio uses (optional: either choose to run this step for gitea or step for github above)
 
 ```bash
 ansible-playbook playbooks/create-gitea.yaml
 ```
 
-Create the gitea repo(s) Nephio uses
+Create the gitea repo(s) Nephio uses (optional: either choose to run this step for gitea or step for github above)
 
 ```bash
 ansible-playbook playbooks/create-gitea-repos.yaml
@@ -128,14 +136,14 @@ ansible-playbook playbooks/configure-nephio.yaml
 # login from your workstation
 #   nephio webui: forwarding 7007 -> localhost:7007 on the remote VM.
 #   gitea webui: forwarding 3000 -> localhost:3000 on the remote VM.
-ssh -L7007:localhost:7007 -L3000:localhost:3000 $IP
+ssh -L7007:localhost:7007 -L3000:localhost:3000 [YOUR_CLOUD_USER]@$IP
 # now you are in the remote VM, in there run
 kubectl --kubeconfig ~/.kube/mgmt-config port-forward --namespace=nephio-webui svc/nephio-webui 7007
 ```
 
 On your workstation you can now browse 
 * to the URL [http://localhost:7007](http://localhost:7007) for the nephio webui
-* to the URL [http://localhost:3000](http://localhost:3000) for the gitea webui (use nephio/nephio to sign in)
+* to the URL [http://localhost:3000](http://localhost:3000) for the gitea webui (in case you chose to enable it by setting gitea username/password in inventory)
 
 ## destroy nephio environment
 
