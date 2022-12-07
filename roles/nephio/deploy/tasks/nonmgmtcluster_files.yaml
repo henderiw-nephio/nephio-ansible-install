@@ -26,6 +26,8 @@
   failed_when:
     - result.rc > 1
     - result.rc == 1 and "already exists" not in result.stderr
+  when:
+    - github_username is defined
 
 - name: configure nephio-configsync
   shell: |
@@ -47,7 +49,9 @@
           secretRef:
             name: github-personal-access-token
     EOF
-  when: github_organization is defined
+  when:
+    - github_username is defined
+    - github_organization is defined
 
 - name: configure nephio-configsync
   shell: |
@@ -69,12 +73,16 @@
           secretRef:
             name: github-personal-access-token
     EOF
-  when: github_organization is not defined
+  when:
+    - github_username is defined
+    - github_organization is not defined
 
 - name: Slurp gitea access token
   ansible.builtin.slurp:
     src: /home/{{ cloud_user }}/gitea/nephio-gitea-token
   register: gitea_token
+  when:
+    - gitea_username is defined
 
 - name: configure secret on {{ item.key }}
   shell: |
@@ -85,6 +93,8 @@
   failed_when:
     - result.rc > 1
     - result.rc == 1 and "already exists" not in result.stderr
+  when:
+    - gitea_username is defined
 
 - name: configure gitea-nephio-configsync
   shell: |
@@ -106,3 +116,5 @@
           secretRef:
             name: gitea-access-token
     EOF
+  when:
+    - gitea_username is defined

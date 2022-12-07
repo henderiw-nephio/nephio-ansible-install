@@ -23,7 +23,9 @@
             name: github-personal-access-token
         type: git
     EOF
-  when: github_organization is defined
+  when:
+    - github_username is defined
+    - github_organization is defined
 
 - name: configure nephio-{{ item.key }} repo
   shell: |
@@ -46,7 +48,9 @@
             name: github-personal-access-token
         type: git
     EOF
-  when: github_organization is not defined
+  when:
+    - github_username is defined
+    - github_organization is not defined
 
 - name: configure gitea-{{ item.key }} repo
   shell: |
@@ -69,6 +73,8 @@
             name: gitea-access-token
         type: git
     EOF
+  when:
+    - gitea_username is defined
 
 - name: configure {{ item.key }} cluster
   shell: |
