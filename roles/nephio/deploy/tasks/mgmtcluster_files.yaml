@@ -32,17 +32,12 @@
     chdir: "{{ tmp_directory }}/{{ nephio.install_dir}}"
 
 - name: configure secret
-  shell: |
-    cat <<EOF | kubectl --kubeconfig ~/.kube/mgmt-config apply -f -
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: github-personal-access-token
-      stringData:
-        password: {{ github_token }}
-        username: {{ github_username }}
-      type: kubernetes.io/basic-auth
-    EOF
+  shell: kubectl --kubeconfig ~/.kube/mgmt-config create secret generic github-personal-access-token \
+    --from-literal=username={{github_username}} \
+    --from-literal=token={{github_token}}
+  failed_when:
+    - result.rc > 1
+    - result.rc == 1 and "already exists" not in result.stderr
   when:
     - github_username is defined
 
@@ -53,17 +48,12 @@
   when:
     - gitea_username is defined
 
-- name: configure gitea secret
-  shell: |
-    cat <<EOF | kubectl --kubeconfig ~/.kube/mgmt-config apply -f -
-      apiVersion: v1
-      kind: Secret
-      metadata:
-        name: gitea-access-token
-      stringData:
-        password: {{ gitea_token['content'] | b64decode }}
-        username: nephio
-      type: kubernetes.io/basic-auth
-    EOF
+- name: configure secret on {{ item.key }}
+  shell: kubectl --kubeconfig ~/.kube/mgmt-config create secret generic gitea-access-token \
+    --from-literal=username=nephio \
+    --from-literal=token={{ gitea_token['content'] | b64decode }}
+  failed_when:
+    - result.rc > 1
+    - result.rc == 1 and "already exists" not in result.stderr
   when:
     - gitea_username is defined

@@ -87,7 +87,9 @@ source .venv/bin/activate
 pip install --upgrade pip
 pip install ansible
 pip install pygithub
+pip install kubernetes
 ansible-galaxy collection install community.general
+ansible-galaxy collection install kubernetes.core
 ```
 
 ## deploy nephio environment
