@@ -35,6 +35,7 @@
   shell: kubectl --kubeconfig ~/.kube/mgmt-config create secret generic github-personal-access-token \
     --from-literal=username={{github_username}} \
     --from-literal=token={{github_token}}
+    --type=kubernetes.io/basic-auth
   failed_when:
     - result.rc > 1
     - result.rc == 1 and "already exists" not in result.stderr
@@ -48,10 +49,11 @@
   when:
     - gitea_username is defined
 
-- name: configure secret on {{ item.key }}
+- name: configure secret on mgmt cluster
   shell: kubectl --kubeconfig ~/.kube/mgmt-config create secret generic gitea-access-token \
-    --from-literal=username=nephio \
-    --from-literal=token={{ gitea_token['content'] | b64decode }}
+    --from-literal=username={{ gitea_username}} \
+    --from-literal=token={{ gitea_token['content'] | b64decode }} \
+    --type=kubernetes.io/basic-auth
   failed_when:
     - result.rc > 1
     - result.rc == 1 and "already exists" not in result.stderr
