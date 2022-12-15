@@ -62,7 +62,7 @@
   shell: kubectl --kubeconfig ~/.kube/{{ item.key }}-config create secret generic gitea-access-token \
     --namespace="config-management-system" \
     --from-literal=username={{ gitea_username }} \
-    --from-literal=password={{ gitea_token['content'] | b64decode }}
+    --from-literal=token={{ gitea_token['content'] | b64decode }}
     --type=kubernetes.io/basic-auth
   failed_when:
     - result.rc > 1
