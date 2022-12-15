@@ -52,7 +52,7 @@
 - name: configure secret on mgmt cluster
   shell: kubectl --kubeconfig ~/.kube/mgmt-config create secret generic gitea-access-token \
     --from-literal=username={{ gitea_username}} \
-    --from-literal=token={{ gitea_token['content'] | b64decode }} \
+    --from-literal=password={{ gitea_token['content'] | b64decode }} \
     --type=kubernetes.io/basic-auth
   failed_when:
     - result.rc > 1
