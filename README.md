@@ -90,6 +90,7 @@ pip install pygithub
 pip install kubernetes
 ansible-galaxy collection install community.general
 ansible-galaxy collection install kubernetes.core
+ansible-galaxy collection install community.docker # required for gitea
 ```
 
 ## deploy nephio environment
