@@ -1,0 +1,85 @@
+{
+  "variables": {
+    "disable_default_service_account": "",
+    "cloud_username": "{{env `MY_CLOUD_USERNAME`}}",
+    "zone": "{{env `MY_ZONE`}}",
+    "project_id": "{{env `MY_PROJECT_ID`}}",
+    "source_image_family": "{{user `build_name`}}-lts"
+  },
+  "builders": [
+    {
+      "disable_default_service_account": "{{ user `disable_default_service_account` }}",
+      "image_family": "nephio",
+      "image_name": "nephio-{{user `build_name` | clean_resource_name}}",
+      "labels": {
+        "build_timestamp": "{{user `build_timestamp`}}",
+        "distribution": "ubuntu",
+        "distribution_release": "{{user `distribution_release`}}",
+        "distribution_version": "{{user `distribution_version`}}"
+      },
+      "machine_type": "n1-standard-1",
+      "name": "{{user `build_name`}}",
+      "project_id": "{{ user `project_id` }}",
+      "source_image_family": "{{ user `source_image_family` }}",
+      "ssh_username": "{{ user `cloud_username` }}",
+      "type": "googlecompute",
+      "zone": "{{ user `zone` }}"
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "while [ ! -f /var/lib/cloud/instance/boot-finished ]; do echo 'Waiting for cloud-init...'; sleep 1; done",
+        "sudo apt-get -qq update",
+        "sudo DEBIAN_FRONTEND=noninteractive apt-get -qq install tree",
+        "sudo DEBIAN_FRONTEND=noninteractive apt-get -qq install apt-transport-https ca-certificates curl software-properties-common",
+        "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg",
+        "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+        "sudo apt-get -qq update",
+        "apt-cache policy docker-ce",
+        "sudo DEBIAN_FRONTEND=noninteractive apt-get -qq install docker-ce",
+        "sudo systemctl status docker",
+        "sudo usermod -aG docker {{ user `cloud_username` }}",
+        "sudo systemctl restart ssh"
+      ]
+    },
+    {
+      "type": "shell",
+      "inline": [
+        "mkdir -p /home/{{ user `cloud_username` }}/nephio-install",
+        "mkdir -p /home/{{ user `cloud_username` }}/nephio-install/inventory"
+      ]
+    },
+    {
+      "type": "file",
+      "source": "../../ansible.cfg",
+      "destination": "/home/{{ user `cloud_username` }}/nephio-install/ansible.cfg"
+    },
+    {
+      "type": "file",
+      "source": "../../Dockerfile",
+      "destination": "/home/{{ user `cloud_username` }}/nephio-install/Dockerfile"
+    },
+    {
+      "type": "file",
+      "source": "../../inventory/nephio.yaml",
+      "destination": "/home/{{ user `cloud_username` }}/nephio-install/inventory/nephio.yaml"
+    },
+    {
+      "type": "file",
+      "source": "../../playbooks",
+      "destination": "/home/{{ user `cloud_username` }}/nephio-install"
+    },
+    {
+      "type": "file",
+      "source": "../../roles",
+      "destination": "/home/{{ user `cloud_username` }}/nephio-install"
+    },
+    {
+      "type": "file",
+      "source": "../../nind",
+      "destination": "/home/{{ user `cloud_username` }}/nephio-install"
+    }
+  ]
+}

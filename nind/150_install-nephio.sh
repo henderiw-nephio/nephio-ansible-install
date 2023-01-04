@@ -11,6 +11,8 @@ echo 'source <(kubectl completion bash)' | tee -a /home/user/.bashrc > /dev/null
 echo 'source <(kpt completion bash)' | tee -a /home/user/.bashrc > /dev/null
 echo 'source <(clab completion bash)' | tee -a /home/user/.bashrc > /dev/null 
 echo 'source <(kind completion bash)' | tee -a /home/user/.bashrc > /dev/null 
+chown -R user:user /tmp/nephio-install
+chown -R user:user /tmp/cni
 echo "-----------------"
 echo "-----------------"
 echo "Setting up python"

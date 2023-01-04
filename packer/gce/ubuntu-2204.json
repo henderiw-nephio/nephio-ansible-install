@@ -1,0 +1,5 @@
+{
+  "build_name": "ubuntu-2204",
+  "distribution_release": "jammy",
+  "distribution_version": "2204"
+}
