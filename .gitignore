@@ -7,7 +7,7 @@
 *.dll
 *.so
 *.dylib
-inventory/nephio.yaml
+inventory/nephio-local.yaml
 .venv
 
 # Test binary, built with `go test -c`

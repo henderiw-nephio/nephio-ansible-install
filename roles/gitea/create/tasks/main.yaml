@@ -2,6 +2,10 @@
 ## Licensed under the Apache License 2.0
 ## SPDX-License-Identifier: Apache-2.0
 ---
+- name: Create the docker network for kind (to make our job easier plumbing up the lot)
+  docker_network:
+    name: kind
+    driver: bridge
 - name: Get UID
   getent:
     database: passwd
